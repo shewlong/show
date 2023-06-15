@@ -28,7 +28,7 @@
       }
 
       /**创建着色器*/
-      function createShader() {
+      function getShader() {
         return `
               struct VertexOut {
                 @builtin(position) position : vec4f,
@@ -57,8 +57,12 @@
       function getArea() {
         //三角形数据
         return new Float32Array([
-          0.0, 0.6, 0, 1, 1, 0, 0, 1, -0.5, -0.6, 0, 1, 0, 1, 0, 1, 0.5, -0.6,
-          0, 1, 0, 0, 1, 1,
+          // Bottom left, red
+          -1.0, -1.0, 0, 1, 1, 0, 0, 1,
+          // Top, green
+          -0.0, 1.0, 0, 1, 0, 1, 0, 1,
+          // Bottom right, blue
+          1.0, -1.0, 0, 1, 0, 0, 1, 1,
         ]);
       }
 
@@ -137,12 +141,12 @@
         });
 
         //TODO: 2 创建着色器模块
-        const shaders = createShader();
+        const shaders = getShader();
         const shaderModule = device.createShaderModule({
           code: shaders,
         });
 
-        //TODO: 3 创建缓冲区
+        //TODO: 3 创建缓冲区(创建一块区域)
         const vertices = getArea();
         const vertexBuffer = device.createBuffer({
           size: vertices.byteLength, // make it big enough to store vertices in
