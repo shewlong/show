@@ -19,7 +19,7 @@
       async function toReady() {
         // 获取适配器
         const adapter = await navigator.gpu.requestAdapter();
-        // 获取设备
+        // 获取GPU设备
         const device = await adapter.requestDevice();
         // 2 获取canvas元素及其上下文
         const canvas = document.querySelector("#gpuCanvas");
@@ -133,10 +133,13 @@
       async function init() {
         //TODO:1 准备工作
         const { gpu, adapter, device, canvas, context } = await toReady();
-        // WebGPU基础配置
+        // WebGPU基础配置上下文
         context.configure({
+          //GPU device
           device: device,
+          //图像格式，推荐，return 'rgba8unorm'||'bgra8unorm'
           format: navigator.gpu.getPreferredCanvasFormat(),
+          //该值会对getCurrentTexture()产生影响，'opaque'||'premultiplied'
           alphaMode: "premultiplied",
         });
 
@@ -168,8 +171,8 @@
         //开始渲染
         passEncoder.setPipeline(renderPipeline);
         passEncoder.setVertexBuffer(0, vertexBuffer);
-        passEncoder.draw(3);
         //通知GPU进行渲染
+        passEncoder.draw(3);
         passEncoder.end();
 
         device.queue.submit([commandEncoder.finish()]);
